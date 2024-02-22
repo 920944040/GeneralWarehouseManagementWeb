@@ -21,6 +21,14 @@ module.exports = {
         "allowFirstLine": false
       }
     }],
+    // "vue/html-indent": ["error", 4, {
+    //   "attribute": 1,
+    //   "baseIndent": 1,
+    //   "closeBracket": 0,
+    //   "alignAttributesVertically": true,
+    //   "ignores": []
+    // }],
+    'indent':['off',2],
     "vue/singleline-html-element-content-newline": "off",
     "vue/multiline-html-element-content-newline":"off",
     "vue/name-property-casing": ["error", "PascalCase"],
