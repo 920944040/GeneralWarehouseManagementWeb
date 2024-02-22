@@ -15,11 +15,12 @@ module.exports = {
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
     "vue/max-attributes": "off",
-    "vue/html-self-closing":0,
-    "vue/max-attributes-per-line":"off",
-    "vue/attributes-order":"off",
-    "vue/html-closing-bracket-newline":"off",
-    "vue/html-indent":"off",
+    "vue/html-self-closing": 0,
+    "vue/max-attributes-per-line": "off",
+    "vue/attributes-order": "off",
+    "vue/html-closing-bracket-newline": "off",
+    "vue/html-indent": "off",
+    "space-before-function-paren": 0,
     // "vue/max-attributes-per-line": [2, {
     //   "singleline": 10,
     //   "multiline": {
@@ -34,9 +35,9 @@ module.exports = {
     //   "alignAttributesVertically": true,
     //   "ignores": []
     // }],
-    'indent':['off',2],
+    'indent': ['off', 2],
     "vue/singleline-html-element-content-newline": "off",
-    "vue/multiline-html-element-content-newline":"off",
+    "vue/multiline-html-element-content-newline": "off",
     "vue/name-property-casing": ["error", "PascalCase"],
     "vue/no-v-html": "off",
     'accessor-pairs': 2,
@@ -61,7 +62,7 @@ module.exports = {
     'curly': [2, 'multi-line'],
     'dot-location': [2, 'property'],
     'eol-last': 2,
-    'eqeqeq': ["error", "always", {"null": "ignore"}],
+    'eqeqeq': ["error", "always", { "null": "ignore" }],
     'generator-star-spacing': [2, {
       'before': true,
       'after': true

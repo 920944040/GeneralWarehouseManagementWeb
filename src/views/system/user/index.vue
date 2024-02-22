@@ -12,9 +12,9 @@
     <el-row :gutter="24">
       <el-col>
         <el-card style="margin: 0 10px 10px 10px;">
-          <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini"
-            style="margin-bottom: 10px;">添加</el-button>
-          <el-table :data="tableData" height="650" border size="mini" style="width: 100%">
+          <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" style="margin-bottom: 10px;"
+            @click="handleAdd()">添加</el-button>
+          <el-table :data="tableData" height="620" border size="mini" style="width: 100%">
             <el-table-column prop="id" label="编号" width="180"></el-table-column>
             <el-table-column prop="name" label="姓名" width="180"></el-table-column>
             <el-table-column prop="account" label="账号"></el-table-column>
@@ -37,6 +37,14 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+      <el-table :data="gridData">
+        <el-table-column property="date" label="编号" width="150"></el-table-column>
+        <el-table-column property="name" label="姓名" width="200"></el-table-column>
+        <el-table-column property="address" label="账号"></el-table-column>
+        <el-table-column property="address" label="账号"></el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -45,6 +53,7 @@ import { getUserByPageAsync } from '@/api/user'
 export default {
   data() {
     return {
+      dialogTableVisible: false,
       page: {
         total: 0,
         pageIndex: 1,
@@ -53,7 +62,7 @@ export default {
       tableData: []
     }
   },
-  created: function() {
+  created: function () {
     this.load()
   },
   methods: {
@@ -63,6 +72,7 @@ export default {
         this.page.total = res.data.total
       })
     },
+    handleAdd() { },
     handleSizeChange(val) {
       this.page.pageSize = val
       this.load()
@@ -70,7 +80,13 @@ export default {
     handleCurrentChange(val) {
       this.page.pageIndex = val
       this.load()
-      console.log(`当前页: ${val}`)
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => { })
     }
   }
 }
