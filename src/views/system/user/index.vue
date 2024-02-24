@@ -83,7 +83,9 @@ export default {
         name: '',
         account: '',
         type: '',
-        isDelete: 0,
+        typeText: '',
+        isDelete: 1,
+        isDeleteText: '',
         remark: ''
       },
       userTypeOption: [],
