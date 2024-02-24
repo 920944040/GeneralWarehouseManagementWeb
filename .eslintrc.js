@@ -14,13 +14,19 @@ module.exports = {
   // add your custom rules here
   //it is base on https://github.com/vuejs/eslint-config-vue
   rules: {
-    "vue/max-attributes-per-line": [2, {
-      "singleline": 10,
-      "multiline": {
-        "max": 1,
-        "allowFirstLine": false
-      }
-    }],
+    "vue/max-attributes": "off",
+    "vue/html-self-closing":0,
+    "vue/max-attributes-per-line":"off",
+    "vue/attributes-order":"off",
+    "vue/html-closing-bracket-newline":"off",
+    "vue/html-indent":"off",
+    // "vue/max-attributes-per-line": [2, {
+    //   "singleline": 10,
+    //   "multiline": {
+    //     "max": 1,
+    //     "allowFirstLine": false
+    //   }
+    // }],
     // "vue/html-indent": ["error", 4, {
     //   "attribute": 1,
     //   "baseIndent": 1,

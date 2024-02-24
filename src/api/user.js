@@ -29,3 +29,10 @@ export function getPermissionMenu(token) {
     params: { token }
   })
 }
+export function getUserByPageAsync(pageIndex, pageSize) {
+  return request({
+    url: 'api/user/GetUserByPageAsync',
+    method: 'get',
+    params: { pageIndex, pageSize }
+  })
+}
