@@ -36,3 +36,16 @@ export function getUserByPageAsync(pageIndex, pageSize) {
     params: { pageIndex, pageSize }
   })
 }
+export function getUserTypeAsync() {
+  return request({
+    url: 'api/user/GetUserTypeAsync',
+    method: 'get'
+  })
+}
+export function addUserAsync(data) {
+  return request({
+    url: 'api/user/InsertUserAsync',
+    method: 'post',
+    data
+  })
+}

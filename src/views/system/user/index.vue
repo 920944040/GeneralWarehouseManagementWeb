@@ -18,8 +18,8 @@
             <el-table-column prop="id" label="编号" width="180"></el-table-column>
             <el-table-column prop="name" label="姓名" width="180"></el-table-column>
             <el-table-column prop="account" label="账号"></el-table-column>
-            <el-table-column prop="type" label="类型"></el-table-column>
-            <el-table-column prop="isDelete" label="是否启用"></el-table-column>
+            <el-table-column prop="typeText" label="类型"></el-table-column>
+            <el-table-column prop="isDeleteText" label="是否启用"></el-table-column>
             <el-table-column prop="remark" label="附记"></el-table-column>
             <el-table-column fixed="right" label="操作" width="200">
               <template slot-scope="scope">
@@ -37,23 +37,56 @@
         </el-card>
       </el-col>
     </el-row>
-    <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
-      <el-table :data="gridData">
-        <el-table-column property="date" label="编号" width="150"></el-table-column>
-        <el-table-column property="name" label="姓名" width="200"></el-table-column>
-        <el-table-column property="address" label="账号"></el-table-column>
-        <el-table-column property="address" label="账号"></el-table-column>
-      </el-table>
+    <el-dialog title="人员信息" :visible.sync="dialogTableVisible" custom-class="dialogwidth">
+      <el-form :model="userForm" label-width="80px">
+        <el-form-item label="编号">
+          <el-input v-model="userForm.id" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="名称">
+          <el-input v-model="userForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="账号">
+          <el-input v-model="userForm.account" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-select v-model="userForm.type" placeholder="请选择类型">
+            <el-option v-for="option in userTypeOption" :key="option.id" :label="option.name"
+              :value="option.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否启用">
+          <el-radio-group v-model="userForm.isDelete">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">未启用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="附记">
+          <el-input v-model="userForm.remark" type="textarea" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="warning" @click="handleReset()">重置</el-button>
+          <el-button type="primary" @click="handleSave()">保存</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserByPageAsync } from '@/api/user'
+import { getUserByPageAsync, addUserAsync, getUserTypeAsync } from '@/api/user'
 export default {
   data() {
     return {
       dialogTableVisible: false,
+      userForm: {
+        id: '',
+        name: '',
+        account: '',
+        type: '',
+        isDelete: 0,
+        remark: ''
+      },
+      userTypeOption: [],
       page: {
         total: 0,
         pageIndex: 1,
@@ -72,7 +105,23 @@ export default {
         this.page.total = res.data.total
       })
     },
-    handleAdd() { },
+    getUserType() {
+      getUserTypeAsync().then(res => {
+        this.userTypeOption = res.data
+      })
+    },
+    handleAdd() {
+      this.dialogTableVisible = true
+      this.getUserType()
+    },
+    handleSave() {
+      addUserAsync(this.userForm).then(res => {
+        console.log(res)
+      })
+    },
+    handleReset() {
+      this.userForm = {}
+    },
     handleSizeChange(val) {
       this.page.pageSize = val
       this.load()
@@ -91,3 +140,9 @@ export default {
   }
 }
 </script>
+<style scoped lang="scss">
+::v-deep .dialogwidth {
+  max-width: 600px;
+  min-width: 300px;
+}
+</style>
