@@ -4,8 +4,8 @@
       <el-col>
         <el-card style="margin: 10px 10px 10px 10px;">
           <span>名称：</span>
-          <el-input style="width: 200px;" size="mini" placeholder="请输入内容" />
-          <el-button style="margin-left: 10px;" size="mini" type="primary">查询</el-button>
+          <el-input v-model="searchData" style="width: 200px;" size="mini" placeholder="请输入内容" />
+          <el-button style="margin-left: 10px;" size="mini" type="primary" @click="handleSearch()">查询</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -23,8 +23,9 @@
             <el-table-column prop="remark" label="附记"></el-table-column>
             <el-table-column fixed="right" label="操作" width="200">
               <template slot-scope="scope">
-                <el-button type="text" size="small" @click="handleClick(scope.row)">编辑</el-button>
-                <el-button type="text" size="small" @click="handleClick(scope.row)">重置密码</el-button>
+                <el-button type="text" size="small" @click="handleEdit(scope.row)">编辑</el-button>
+                <el-button type="text" size="small" @click="handleReset(scope.row)">重置密码</el-button>
+                <el-button type="text" size="small" @click="handlePermissions(scope.row)">用户权限</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -40,7 +41,7 @@
     <el-dialog title="人员信息" :visible.sync="dialogTableVisible" custom-class="dialogwidth">
       <el-form :model="userForm" label-width="80px">
         <el-form-item label="编号">
-          <el-input v-model="userForm.id" autocomplete="off"></el-input>
+          <el-input v-model="userForm.id" disabled autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="名称">
           <el-input v-model="userForm.name" autocomplete="off"></el-input>
@@ -64,19 +65,21 @@
           <el-input v-model="userForm.remark" type="textarea" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="warning" @click="handleReset()">重置</el-button>
           <el-button type="primary" @click="handleSave()">保存</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
+    <el-dialog></el-dialog>
   </div>
 </template>
 
 <script>
-import { getUserByPageAsync, addUserAsync, getUserTypeAsync } from '@/api/user'
+import { getUserByPageAsync, addUserAsync, getUserTypeAsync, searchUserAsync, getUserByIdAsync, updateUserAsync, resetPasswordAsync } from '@/api/user'
 export default {
   data() {
     return {
+      action: '',
+      searchData: '',
       dialogTableVisible: false,
       userForm: {
         id: '',
@@ -97,6 +100,15 @@ export default {
       tableData: []
     }
   },
+  watch: {
+    searchData(newVal, oldVal) {
+      if (newVal !== '') {
+        this.handleSearch()
+      } else {
+        this.load()
+      }
+    }
+  },
   created: function () {
     this.load()
   },
@@ -107,30 +119,89 @@ export default {
         this.page.total = res.data.total
       })
     },
+    handleSearch() {
+      searchUserAsync(this.page.pageIndex, this.page.pageSize, this.searchData).then(res => {
+        this.tableData = res.data.data
+        this.page.total = res.data.total
+      })
+    },
     getUserType() {
       getUserTypeAsync().then(res => {
         this.userTypeOption = res.data
       })
     },
     handleAdd() {
+      this.userForm = {}
       this.dialogTableVisible = true
+      this.action = 'add'
       this.getUserType()
     },
-    handleSave() {
-      addUserAsync(this.userForm).then(res => {
-        console.log(res)
+    handleEdit(row) {
+      this.dialogTableVisible = true
+      this.action = 'edit'
+      this.getUserType()
+      getUserByIdAsync(row.id).then(res => {
+        this.userForm = res.data
       })
     },
-    handleReset() {
-      this.userForm = {}
+    handleSave() {
+      if (this.action === 'add') {
+        addUserAsync(this.userForm).then(res => {
+          if (res.data === '添加成功') {
+            this.dialogTableVisible = false
+            this.load()
+            this.$message({
+              message: res.data,
+              type: 'success'
+            })
+          } else {
+            this.$message.error(res.data)
+          }
+        })
+      } else {
+        updateUserAsync(this.userForm).then(res => {
+          if (res.data === '更新成功') {
+            this.dialogTableVisible = false
+            this.load()
+            this.$message({
+              message: res.data,
+              type: 'success'
+            })
+          } else {
+            this.$message.error(res.data)
+          }
+        })
+      }
+    },
+    handlePermissions() {},
+    handleReset(row) {
+      resetPasswordAsync(row.id).then(res => {
+        if (res.data === '重置密码成功') {
+          this.load()
+          this.$message({
+            message: res.data,
+            type: 'success'
+          })
+        } else {
+          this.$message.error(res.data)
+        }
+      })
     },
     handleSizeChange(val) {
       this.page.pageSize = val
-      this.load()
+      if (this.searchData !== '') {
+        this.handleSearch()
+      } else {
+        this.load()
+      }
     },
     handleCurrentChange(val) {
       this.page.pageIndex = val
-      this.load()
+      if (this.searchData !== '') {
+        this.handleSearch()
+      } else {
+        this.load()
+      }
     },
     handleClose(done) {
       this.$confirm('确认关闭？')

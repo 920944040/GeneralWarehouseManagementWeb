@@ -49,3 +49,31 @@ export function addUserAsync(data) {
     data
   })
 }
+export function searchUserAsync(pageIndex, pageSize, userName) {
+  return request({
+    url: 'api/user/SearchUserAsync',
+    method: 'get',
+    params: { pageIndex, pageSize, userName }
+  })
+}
+export function updateUserAsync(data) {
+  return request({
+    url: 'api/user/UpdateUserAsync',
+    method: 'post',
+    data
+  })
+}
+export function getUserByIdAsync(id) {
+  return request({
+    url: 'api/user/GetUserByIdAsync',
+    method: 'get',
+    params: { id }
+  })
+}
+export function resetPasswordAsync(id) {
+  return request({
+    url: 'api/user/ResetPasswordAsync',
+    method: 'get',
+    params: { id }
+  })
+}
